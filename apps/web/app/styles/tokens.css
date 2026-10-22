@@ -1,0 +1,690 @@
+/*
+ * Corner Room design tokens (Phase 16, Stage 3).
+ * Source of truth: docs/frontend/BRAND_GUIDELINE.md and docs/frontend/DESIGN_SYSTEM.md.
+ *
+ * Three layers:
+ *   1. Brand primitives   @theme         -> bg-cr-signal, text-cr-lamp ...  (brand pieces only)
+ *   2. Semantic roles     @theme inline  -> bg-surface, text-fg, border-line ... (every component)
+ *   3. Theme scopes       [data-theme]   -> ember (default), sky (Music), staff (graphite),
+ *                                          paper (documents), artist-studio (mint, signed-in artists)
+ *
+ * Components use semantic roles only. A module re-skins by setting data-theme (and later
+ * data-module overrides) on its layout, never by editing components.
+ */
+
+/* ---------- 1. Brand primitives ---------- */
+@theme {
+  /* Ember world */
+  --color-cr-signal: #b21f24;
+  --color-cr-oxblood: #831515;
+  --color-cr-lamp: #fcf475;
+  /* Sky world */
+  --color-cr-sky: #53c8ea;
+  --color-cr-indigo: #4f4789;
+  --color-cr-ice: #bbedfe;
+  /* Derived */
+  --color-cr-night: #140707;
+  --color-cr-deep: #120f26;
+  --color-cr-graphite: #110e0f;
+  --color-cr-cream: #f6ece6;
+  --color-cr-muted: #cdb9b3;
+  --color-cr-mist: #b9b6d6;
+  --color-cr-paper: #fbf5e6;
+  --color-cr-ink: #1c0607;
+  --color-cr-red-glow: #ff5a4e;
+  --color-cr-indigo-ink: #2e2860;
+
+  /* Motion (BRAND_GUIDELINE section 10) */
+  --ease-corner: cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+/* ---------- 2. Semantic roles (resolve at use site, so scopes can override) ---------- */
+@theme inline {
+  --color-surface: var(--cr-surface);
+  --color-surface-raised: var(--cr-surface-raised);
+  --color-surface-sunken: var(--cr-surface-sunken);
+  --color-surface-overlay: var(--cr-surface-overlay);
+  --color-line: var(--cr-line);
+  --color-line-strong: var(--cr-line-strong);
+  --color-fg: var(--cr-fg);
+  --color-fg-muted: var(--cr-fg-muted);
+  --color-accent: var(--cr-accent);
+  --color-on-accent: var(--cr-on-accent);
+  --color-brand: var(--cr-brand);
+  --color-on-brand: var(--cr-on-brand);
+  --color-highlight: var(--cr-highlight);
+  --color-link: var(--cr-link);
+  --color-focus: var(--cr-focus);
+  --color-danger: var(--cr-danger);
+  --color-danger-fill: var(--cr-danger-fill);
+  --color-on-danger-fill: var(--cr-on-danger-fill);
+  --color-success: var(--cr-success);
+  --color-warning: var(--cr-warning);
+  --color-info: var(--cr-info);
+
+  --font-display: var(--font-sikat), var(--font-anek), "Arial Narrow", sans-serif;
+  --font-ui: var(--font-archivo), var(--font-anek), system-ui, sans-serif;
+  --font-bangla: var(--font-anek), var(--font-archivo), sans-serif;
+}
+
+/* ---------- 3. Theme scopes ---------- */
+:root,
+[data-theme="ember"] {
+  --cr-surface: #140707;
+  --cr-surface-raised: #1f0f0e;
+  --cr-surface-sunken: #0d0404;
+  --cr-surface-overlay: rgb(246 236 230 / 0.07);
+  --cr-line: rgb(246 236 230 / 0.14);
+  --cr-line-strong: rgb(246 236 230 / 0.3);
+  --cr-fg: #f6ece6;
+  --cr-fg-muted: #cdb9b3;
+  --cr-accent: #fcf475;
+  --cr-on-accent: #1c0607;
+  --cr-brand: #b21f24;
+  --cr-on-brand: #fcf475;
+  --cr-highlight: #fcf475;
+  --cr-link: #fcf475;
+  --cr-focus: #fcf475;
+  --cr-display-shadow: #b21f24;
+
+  /* Corner Light (BRAND_GUIDELINE 5.6) */
+  --cr-light-size: 70% 62%;
+  --cr-light-bulb: rgb(252 244 117 / 0.16);
+  --cr-light-pool: rgb(178 31 36 / 0.92);
+  --cr-light-falloff: rgb(131 21 21 / 0.5);
+  --cr-light-counter: rgb(131 21 21 / 0.5);
+  --cr-light-sweep: rgb(178 31 36 / 0.1);
+  /* Side spill (v1.2): the corner light carried down the page along the depth axis. */
+  --cr-light-side: rgb(131 21 21 / 0.42);
+
+  /* Room Cube tones */
+  --cr-cube-field: #b21f24;
+  --cr-cube-face: #fcf475;
+  --cr-cube-shadow: #831515;
+
+  /* Glass (v1.2): translucent raised fill with a faint cream sheen from the lit corner, an edge
+     that is brightest at the cut corner, and a frosted blur of the page light behind it. */
+  --cr-glass-fill: linear-gradient(135deg, rgb(246 236 230 / 0.075), rgb(246 236 230 / 0.018) 55%), rgb(31 15 14 / 0.52);
+  --cr-glass-edge: linear-gradient(135deg, rgb(246 236 230 / 0.32), rgb(246 236 230 / 0.12) 40%, rgb(246 236 230 / 0.07));
+  --cr-glass-edge-hover: linear-gradient(135deg, rgb(252 244 117 / 0.5), rgb(246 236 230 / 0.18) 40%, rgb(246 236 230 / 0.1));
+  --cr-glass-blur: blur(18px) saturate(1.35);
+  --cr-bar: rgb(20 7 7 / 0.66);
+  /* Pointer light: Lamp at the core, Red Glow, falling to Oxblood. */
+  --cr-pl-size: max(62vmax, 760px);
+  --cr-pl-core: rgb(252 244 117 / 0.1);
+  --cr-pl-mid: rgb(255 90 78 / 0.15);
+}
+
+[data-theme="sky"] {
+  --cr-surface: #120f26;
+  --cr-surface-raised: #1b1838;
+  --cr-surface-sunken: #0b0919;
+  --cr-surface-overlay: rgb(187 237 254 / 0.07);
+  --cr-line: rgb(187 237 254 / 0.16);
+  --cr-line-strong: rgb(187 237 254 / 0.32);
+  --cr-fg: #f6ece6;
+  --cr-fg-muted: #b9b6d6;
+  --cr-accent: #53c8ea;
+  --cr-on-accent: #2e2860;
+  --cr-brand: #4f4789;
+  --cr-on-brand: #bbedfe;
+  --cr-highlight: #bbedfe;
+  --cr-link: #bbedfe;
+  --cr-focus: #bbedfe;
+  --cr-display-shadow: #4f4789;
+
+  --cr-light-size: 70% 62%;
+  --cr-light-bulb: rgb(187 237 254 / 0.16);
+  --cr-light-pool: rgb(83 200 234 / 0.44);
+  --cr-light-falloff: rgb(79 71 137 / 0.52);
+  --cr-light-counter: rgb(79 71 137 / 0.52);
+  --cr-light-sweep: rgb(83 200 234 / 0.05);
+  --cr-light-side: rgb(79 71 137 / 0.4);
+
+  --cr-cube-field: #53c8ea;
+  --cr-cube-face: #bbedfe;
+  --cr-cube-shadow: #4f4789;
+
+  --cr-glass-fill: linear-gradient(135deg, rgb(187 237 254 / 0.085), rgb(187 237 254 / 0.02) 55%), rgb(27 24 56 / 0.5);
+  --cr-glass-edge: linear-gradient(135deg, rgb(187 237 254 / 0.36), rgb(187 237 254 / 0.13) 40%, rgb(187 237 254 / 0.07));
+  --cr-glass-edge-hover: linear-gradient(135deg, rgb(187 237 254 / 0.62), rgb(187 237 254 / 0.2) 40%, rgb(187 237 254 / 0.1));
+  --cr-glass-blur: blur(18px) saturate(1.35);
+  --cr-bar: rgb(18 15 38 / 0.66);
+  /* Pointer light: Ice at the core, Sky, falling to Indigo. */
+  --cr-pl-size: max(62vmax, 760px);
+  --cr-pl-core: rgb(187 237 254 / 0.12);
+  --cr-pl-mid: rgb(83 200 234 / 0.13);
+}
+
+[data-theme="staff"] {
+  --cr-surface: #110e0f;
+  --cr-surface-raised: #1a1617;
+  --cr-surface-sunken: #0a0809;
+  --cr-surface-overlay: rgb(246 236 230 / 0.05);
+  --cr-line: rgb(246 236 230 / 0.12);
+  --cr-line-strong: rgb(246 236 230 / 0.26);
+  --cr-fg: #f6ece6;
+  --cr-fg-muted: #cdb9b3;
+  --cr-accent: #fcf475;
+  --cr-on-accent: #1c0607;
+  --cr-brand: #b21f24;
+  --cr-on-brand: #fcf475;
+  --cr-highlight: #fcf475;
+  --cr-link: #fcf475;
+  --cr-focus: #fcf475;
+  --cr-display-shadow: transparent;
+
+  /* D-THEME-01 (owner, 2026-10-18): the staff and admin console is the black Corner Room palette,
+     not Ember or Sky. A quiet neutral lamp instead of the red pool; Lamp stays the action colour. */
+  --cr-light-size: 50% 40%;
+  --cr-light-bulb: transparent;
+  --cr-light-pool: rgb(246 236 230 / 0.05);
+  --cr-light-falloff: transparent;
+  --cr-light-counter: transparent;
+  --cr-light-sweep: transparent;
+  --cr-light-side: rgb(59 59 59 / 0.16);
+
+  --cr-cube-field: #fbf5e6;
+  --cr-cube-face: #1c0607;
+  --cr-cube-shadow: #3b3b3b;
+
+  /* Staff: the same glass, quieter, so dense tables stay calm. */
+  --cr-glass-fill: linear-gradient(135deg, rgb(246 236 230 / 0.05), rgb(246 236 230 / 0.012) 55%), rgb(26 22 23 / 0.62);
+  --cr-glass-edge: linear-gradient(135deg, rgb(246 236 230 / 0.22), rgb(246 236 230 / 0.1) 40%, rgb(246 236 230 / 0.07));
+  --cr-glass-edge-hover: linear-gradient(135deg, rgb(246 236 230 / 0.36), rgb(246 236 230 / 0.14) 40%, rgb(246 236 230 / 0.09));
+  --cr-glass-blur: blur(14px) saturate(1.2);
+  --cr-bar: rgb(17 14 15 / 0.72);
+  --cr-pl-size: 0px;
+  --cr-pl-core: transparent;
+  --cr-pl-mid: transparent;
+}
+
+/* Artist Studio (D-THEME-02, owner 2026-10-22; docs/frontend/ARTIST_STUDIO_DESIGN_GUIDE.md): the
+   green/mint world of the signed-in artist and band workspace only. Public artist pages, fan,
+   listening and staff pages keep their worlds. Light from the same corner along the same 117 deg
+   axis: a dim Signal Mint pool falling through Forest, a Pale Mint bulb, a quiet Forest counter.
+   The pool stays dim so muted text at the lit corner keeps AA (tokens.test.ts checks the blend). */
+[data-theme="artist-studio"] {
+  --cr-surface: #0b1710;
+  --cr-surface-raised: #12251a;
+  --cr-surface-sunken: #07110b;
+  --cr-surface-overlay: rgb(211 236 201 / 0.07);
+  --cr-line: #355340;
+  --cr-line-strong: rgb(211 236 201 / 0.34);
+  --cr-fg: #f6f2ec;
+  --cr-fg-muted: #b7c5b9;
+  --cr-accent: #2cbb76;
+  --cr-on-accent: #07110b;
+  --cr-brand: #2cbb76;
+  --cr-on-brand: #07110b;
+  --cr-highlight: #d3ecc9;
+  --cr-link: #d3ecc9;
+  --cr-focus: #2cbb76;
+  --cr-display-shadow: #326000;
+
+  --cr-light-size: 70% 62%;
+  --cr-light-bulb: rgb(211 236 201 / 0.08);
+  --cr-light-pool: rgb(44 187 118 / 0.28);
+  --cr-light-falloff: rgb(50 96 0 / 0.42);
+  --cr-light-counter: rgb(50 96 0 / 0.3);
+  --cr-light-sweep: rgb(44 187 118 / 0.04);
+  --cr-light-side: rgb(50 96 0 / 0.3);
+
+  --cr-cube-field: #2cbb76;
+  --cr-cube-face: #d3ecc9;
+  --cr-cube-shadow: #326000;
+
+  --cr-glass-fill: linear-gradient(135deg, rgb(211 236 201 / 0.07), rgb(211 236 201 / 0.018) 55%), rgb(18 37 26 / 0.56);
+  --cr-glass-edge: linear-gradient(135deg, rgb(211 236 201 / 0.3), rgb(211 236 201 / 0.11) 40%, rgb(211 236 201 / 0.07));
+  --cr-glass-edge-hover: linear-gradient(135deg, rgb(44 187 118 / 0.6), rgb(211 236 201 / 0.18) 40%, rgb(211 236 201 / 0.1));
+  --cr-glass-blur: blur(18px) saturate(1.3);
+  --cr-bar: rgb(11 23 16 / 0.7);
+  /* Pointer light: Pale Mint at the core, Signal Mint, restrained. */
+  --cr-pl-size: max(62vmax, 760px);
+  --cr-pl-core: rgb(211 236 201 / 0.07);
+  --cr-pl-mid: rgb(44 187 118 / 0.1);
+}
+
+/* Status colours, identical in every world, reset on every scope so nesting never leaks.
+   Danger is a crimson, never Signal Red (OD-15, Recommended). Always paired with an icon and a label. */
+:root,
+[data-theme] {
+  --cr-danger: #ff6b81;
+  --cr-danger-fill: #c81e4f;
+  --cr-on-danger-fill: #ffffff;
+  --cr-success: #3dd68c;
+  --cr-warning: #f5a524;
+  --cr-info: #53c8ea;
+}
+
+/* Paper: light reading surface for editorial sections and documents (Stage 4, OD-23 Recommended).
+   Declared after the shared status block so its darker status colours win on a light ground. */
+[data-theme="paper"] {
+  --cr-surface: #fbf5e6;
+  --cr-surface-raised: #f3ead6;
+  --cr-surface-sunken: #fffdf7;
+  --cr-surface-overlay: rgb(28 6 7 / 0.04);
+  --cr-line: rgb(28 6 7 / 0.14);
+  --cr-line-strong: rgb(28 6 7 / 0.3);
+  --cr-fg: #1c0607;
+  --cr-fg-muted: #6b4f49;
+  --cr-accent: #b21f24;
+  --cr-on-accent: #fcf475;
+  --cr-brand: #831515;
+  --cr-on-brand: #fcf475;
+  --cr-highlight: #b21f24;
+  --cr-link: #b21f24;
+  --cr-focus: #b21f24;
+  --cr-display-shadow: #fcf475;
+
+  --cr-danger: #a8174a;
+  --cr-danger-fill: #b0174e;
+  --cr-on-danger-fill: #ffffff;
+  --cr-success: #0b6b3f;
+  --cr-warning: #8a5300;
+  --cr-info: #17607a;
+
+  --cr-light-size: 60% 50%;
+  --cr-light-bulb: transparent;
+  --cr-light-pool: rgb(178 31 36 / 0.08);
+  --cr-light-falloff: transparent;
+  --cr-light-counter: transparent;
+  --cr-light-sweep: transparent;
+  --cr-light-side: transparent;
+
+  --cr-cube-field: #b21f24;
+  --cr-cube-face: #fcf475;
+  --cr-cube-shadow: #831515;
+
+  --cr-glass-fill: linear-gradient(135deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.2) 55%), rgb(243 234 214 / 0.62);
+  --cr-glass-edge: linear-gradient(135deg, rgb(28 6 7 / 0.22), rgb(28 6 7 / 0.1) 40%, rgb(28 6 7 / 0.08));
+  --cr-glass-edge-hover: linear-gradient(135deg, rgb(178 31 36 / 0.5), rgb(28 6 7 / 0.16) 40%, rgb(28 6 7 / 0.1));
+  --cr-glass-blur: blur(14px) saturate(1.1);
+  --cr-bar: rgb(251 245 230 / 0.78);
+  --cr-pl-size: 0px;
+  --cr-pl-core: transparent;
+  --cr-pl-mid: transparent;
+}
+
+/* People who ask the system for less transparency get solid panels and bars. */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme] {
+    --cr-glass-fill: var(--cr-surface-raised);
+    --cr-glass-blur: none;
+    --cr-bar: var(--cr-surface);
+  }
+}
+
+/* Motion durations (BRAND_GUIDELINE section 10) */
+:root {
+  --cr-dur-micro: 120ms;
+  --cr-dur-interaction: 180ms;
+  --cr-dur-component: 260ms;
+  --cr-dur-hero: 420ms;
+  --cr-cut: 14px;
+  --cr-cut-sm: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cr-dur-micro: 0ms;
+    --cr-dur-interaction: 0ms;
+    --cr-dur-component: 0ms;
+    --cr-dur-hero: 0ms;
+  }
+}
+
+/* ---------- Brand utilities ---------- */
+@layer components {
+  /* A themed region: paints its own base, text colour and UI font. */
+  .cr-scope {
+    background-color: var(--cr-surface);
+    color: var(--cr-fg);
+    font-family: var(--font-archivo), var(--font-anek), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Corner Light: gradient pools from the top-left corner, grain inside the gradient only (5.7).
+     Never give this layer a z-index; place content in a positioned sibling above it.
+     v1.2 (2026-10-13): finer grain (512 px tile drawn at 256 px, so each grain is half the size)
+     and long, eased falloffs (many stops) so the pools melt into the base without banding. */
+  .cr-light {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(40% 34% at 7% 5%, var(--cr-light-bulb), color-mix(in srgb, var(--cr-light-bulb) 38%, transparent) 42%, transparent 74%),
+      radial-gradient(
+        var(--cr-light-size) at 0% 0%,
+        var(--cr-light-pool),
+        color-mix(in srgb, var(--cr-light-pool) 72%, var(--cr-light-falloff)) 16%,
+        var(--cr-light-falloff) 38%,
+        color-mix(in srgb, var(--cr-light-falloff) 52%, transparent) 56%,
+        color-mix(in srgb, var(--cr-light-falloff) 18%, transparent) 74%,
+        transparent 92%
+      ),
+      radial-gradient(64% 60% at 100% 100%, var(--cr-light-counter), color-mix(in srgb, var(--cr-light-counter) 38%, transparent) 42%, transparent 80%),
+      linear-gradient(117deg, transparent 32%, var(--cr-light-sweep) 52%, transparent 72%),
+      var(--cr-surface);
+  }
+
+  /* Page light (v1.2): every page's <main> carries one continuous Corner Light, sized in
+     viewport units so it reads the same on a short page and a long one. Same recipe and the same
+     single grain tile as .cr-light; glass cards anywhere on the page frost it. */
+  #main.cr-scope {
+    position: relative;
+    /* Its own stacking context: the pointer light and grain (z-index -1) paint above this
+       background and beneath every piece of content. */
+    isolation: isolate;
+    background:
+      radial-gradient(max(46vw, 420px) max(40vh, 340px) at 6% 0%, var(--cr-light-bulb), color-mix(in srgb, var(--cr-light-bulb) 34%, transparent) 44%, transparent 78%),
+      radial-gradient(
+        max(92vw, 760px) max(92vh, 720px) at 0% 0%,
+        var(--cr-light-pool),
+        color-mix(in srgb, var(--cr-light-pool) 70%, var(--cr-light-falloff)) 14%,
+        var(--cr-light-falloff) 34%,
+        color-mix(in srgb, var(--cr-light-falloff) 55%, transparent) 52%,
+        color-mix(in srgb, var(--cr-light-falloff) 22%, transparent) 70%,
+        color-mix(in srgb, var(--cr-light-falloff) 6%, transparent) 86%,
+        transparent 100%
+      ),
+      radial-gradient(max(70vw, 620px) max(80vh, 620px) at 100% 100%, var(--cr-light-counter), color-mix(in srgb, var(--cr-light-counter) 40%, transparent) 40%, color-mix(in srgb, var(--cr-light-counter) 10%, transparent) 70%, transparent 100%),
+      radial-gradient(max(52vw, 460px) max(85vh, 620px) at 100% 34%, var(--cr-light-side), color-mix(in srgb, var(--cr-light-side) 35%, transparent) 45%, transparent 80%),
+      radial-gradient(max(46vw, 420px) max(80vh, 600px) at 0% 68%, color-mix(in srgb, var(--cr-light-side) 70%, transparent), color-mix(in srgb, var(--cr-light-side) 22%, transparent) 45%, transparent 80%),
+      linear-gradient(117deg, transparent 18%, var(--cr-light-sweep) 44%, transparent 76%),
+      var(--cr-surface);
+  }
+
+  /* Pointer light (v1.4, components/brand/pointer-light.tsx). The light's focus follows a mouse,
+     beneath the grain, beneath content. The spot only ever moves by transform (compositor), so it
+     stays smooth; the grain is the same single soft-light tile, now above the light. */
+  .cr-pl {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .cr-pl-clip {
+    overflow: hidden;
+  }
+  /* Page layers: fixed to the viewport (cheap to blend, no scroll maths) and beneath the page's
+     content inside the isolated <main>. Opaque bands, the header and the footer sit above them. */
+  .cr-pl-page {
+    position: fixed;
+    z-index: -1;
+  }
+  .cr-pl-spot {
+    position: absolute;
+    left: calc(var(--cr-pl-size) / -2);
+    top: calc(var(--cr-pl-size) / -2);
+    width: var(--cr-pl-size);
+    height: var(--cr-pl-size);
+    background: radial-gradient(
+      circle closest-side,
+      var(--cr-pl-core),
+      color-mix(in srgb, var(--cr-pl-core) 35%, var(--cr-pl-mid)) 16%,
+      var(--cr-pl-mid) 36%,
+      color-mix(in srgb, var(--cr-pl-mid) 45%, transparent) 60%,
+      color-mix(in srgb, var(--cr-pl-mid) 14%, transparent) 80%,
+      transparent 100%
+    );
+    will-change: transform;
+    transform: translate3d(16vw, 14vh, 0);
+  }
+  .cr-pl-grain {
+    background: url("/brand/grain-soft-2x.webp") 0 0 / 256px 256px repeat;
+    mix-blend-mode: soft-light;
+  }
+  [data-theme="staff"] .cr-pl-spot,
+  [data-theme="paper"] .cr-pl-spot {
+    display: none;
+  }
+  /* The staff console has a side navigation next to <main>. A layer fixed to the viewport would
+     spill over it (and the header gap) where its soft-light grain has nothing to blend with and
+     shows as raw grey noise (owner report, 2026-10-18). Keep staff page layers inside <main>; the
+     Artist Studio shell has a side navigation too. */
+  #main.cr-scope[data-theme="staff"] > .cr-pl-page,
+  #main.cr-scope[data-theme="artist-studio"] > .cr-pl-page {
+    position: absolute;
+  }
+
+  /* A lit region of the same world inside a lit page does not repaint: the page light shows
+     through, so there is no seam at the bottom of a hero, and its own light layer is switched off.
+     A region of another world (a Sky band on an Ember page) keeps its own base and light. */
+  [data-theme="ember"] .cr-scope[data-theme="ember"],
+  [data-theme="sky"] .cr-scope[data-theme="sky"],
+  [data-theme="staff"] .cr-scope[data-theme="staff"],
+  [data-theme="paper"] .cr-scope[data-theme="paper"],
+  [data-theme="artist-studio"] .cr-scope[data-theme="artist-studio"] {
+    background-color: transparent;
+  }
+  [data-theme="ember"] .cr-scope[data-theme="ember"] > .cr-light,
+  [data-theme="sky"] .cr-scope[data-theme="sky"] > .cr-light,
+  [data-theme="staff"] .cr-scope[data-theme="staff"] > .cr-light,
+  [data-theme="paper"] .cr-scope[data-theme="paper"] > .cr-light,
+  [data-theme="ember"] .cr-scope[data-theme="ember"] > .cr-pl,
+  [data-theme="sky"] .cr-scope[data-theme="sky"] > .cr-pl,
+  [data-theme="staff"] .cr-scope[data-theme="staff"] > .cr-pl,
+  [data-theme="paper"] .cr-scope[data-theme="paper"] > .cr-pl,
+  [data-theme="artist-studio"] .cr-scope[data-theme="artist-studio"] > .cr-light,
+  [data-theme="artist-studio"] .cr-scope[data-theme="artist-studio"] > .cr-pl {
+    display: none;
+  }
+
+  /* Cut corner (5.8). The fill and the border are drawn by clipped pseudo-elements, so the
+     element itself is never clipped and its focus outline stays fully visible. */
+  .cr-cut {
+    position: relative;
+    isolation: isolate;
+    --cut: var(--cr-cut);
+    --cut-fill: transparent;
+    --cut-border: transparent;
+    --cut-bw: 1px;
+  }
+  .cr-cut-sm {
+    --cut: var(--cr-cut-sm);
+  }
+  .cr-cut::before,
+  .cr-cut::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    transition: background-color var(--cr-dur-interaction) var(--ease-corner);
+  }
+  /* The border is a ring (evenodd clip with a hole), so a translucent fill never stacks on it. */
+  .cr-cut::before {
+    inset: 0;
+    background: var(--cut-border);
+    clip-path: polygon(
+      evenodd,
+      var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut), var(--cut) 0,
+      calc(var(--cut) + var(--cut-bw) * 0.414) var(--cut-bw),
+      calc(100% - var(--cut-bw)) var(--cut-bw),
+      calc(100% - var(--cut-bw)) calc(100% - var(--cut-bw)),
+      var(--cut-bw) calc(100% - var(--cut-bw)),
+      var(--cut-bw) calc(var(--cut) + var(--cut-bw) * 0.414),
+      calc(var(--cut) + var(--cut-bw) * 0.414) var(--cut-bw)
+    );
+  }
+  .cr-cut::after {
+    inset: var(--cut-bw);
+    background: var(--cut-fill);
+    /* Frosting sits on the clipped fill, so the blur follows the cut corner exactly. */
+    -webkit-backdrop-filter: var(--cut-blur, none);
+    backdrop-filter: var(--cut-blur, none);
+    clip-path: polygon(calc(var(--cut) - var(--cut-bw) * 0.41) 0, 100% 0, 100% 100%, 0 100%, 0 calc(var(--cut) - var(--cut-bw) * 0.41));
+  }
+
+  /* Glass card (v1.2, owner direction 2026-10-13): the default look for cards, panels and boxes.
+     Use with .cr-cut. Hover brightens the corner edge; it never moves text. */
+  .cr-glass-card {
+    --cut-fill: var(--cr-glass-fill);
+    --cut-border: var(--cr-glass-edge);
+    --cut-blur: var(--cr-glass-blur);
+    /* Lift: offset down with negative spread, so nothing shows at the cut corner. */
+    box-shadow: 0 26px 50px -30px rgb(0 0 0 / 0.75);
+  }
+  .cr-glass-card.cr-hover:hover,
+  .cr-glass-card.cr-hover:focus-within {
+    --cut-border: var(--cr-glass-edge-hover);
+  }
+
+  /* List rows (events, tracks): a soft glass wash from the lit side on hover and keyboard focus.
+     Drawn by an isolated pseudo-element just outside the row, so hairlines stay aligned. */
+  .cr-row {
+    position: relative;
+    isolation: isolate;
+  }
+  .cr-row::before {
+    content: "";
+    position: absolute;
+    inset: 0 -0.75rem;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg, var(--cr-surface-overlay), color-mix(in srgb, var(--cr-surface-overlay) 40%, transparent) 70%, transparent);
+    transition: opacity var(--cr-dur-interaction) var(--ease-corner);
+  }
+  .cr-row:hover::before,
+  .cr-row:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Footer closing light (every shell's footer): a low pool from the bottom-left corner, behind
+     the logo. Static; site-footer fades it in once, not under reduced motion. */
+  .cr-footer-light {
+    background:
+      radial-gradient(42% 120% at 0% 100%, color-mix(in srgb, var(--cr-light-pool) 45%, transparent), transparent 70%),
+      radial-gradient(18% 60% at 4% 100%, var(--cr-light-bulb), transparent 75%);
+  }
+
+  /* Sticky bars (site header, staff header): the page light passes under them, frosted. */
+  .cr-bar {
+    background-color: var(--cr-bar);
+    -webkit-backdrop-filter: var(--cr-glass-blur);
+    backdrop-filter: var(--cr-glass-blur);
+  }
+
+  /* Cut corner by clipping the region itself. Only for bands and documents whose edges hold no
+     focusable control (a clip would cut its focus outline); use .cr-cut everywhere else. */
+  .cr-clip-cut {
+    clip-path: polygon(var(--cut, var(--cr-cut)) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut, var(--cr-cut)));
+  }
+
+  /* Display type: Sikat words only, uppercase. Never numerals (slashed zero). */
+  .cr-display {
+    font-family: var(--font-sikat), var(--font-anek), "Arial Narrow", sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.86;
+  }
+  /* Two-colour print slightly out of register: display sizes (48 px and up) only. */
+  .cr-misregister {
+    text-shadow: 3px 3px 0 var(--cr-display-shadow);
+  }
+
+  /* Greeting face (v1.4): Instrument Serif Italic, only for a person's name in a welcome.
+     Never for headings, prices, body copy or Bangla. */
+  .cr-greeting {
+    font-family: var(--font-greeting), Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Display-adjacent line (v1.4): condensed Archivo, uppercase and tracked, so a sentence can sit
+     beside Sikat without being set in it (Sikat stays off body copy, BRAND 6). */
+  .cr-display-line {
+    font-family: var(--font-archivo), sans-serif;
+    font-stretch: 75%;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Numerals: condensed Archivo, never Sikat. */
+  .cr-num {
+    font-family: var(--font-archivo), sans-serif;
+    font-stretch: 62%;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* Eyebrow / micro-label */
+  .cr-eyebrow {
+    font-family: var(--font-archivo), sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* The taka sign always comes from a Bengali-capable face. */
+  .cr-taka {
+    font-family: var(--font-taka), var(--font-anek), sans-serif;
+    font-stretch: 100%;
+    font-size: 1.04em;
+    margin-inline-end: 0.06em;
+  }
+
+  /* Glass on a plain rectangle (no cut corner): the player bar, flat panels. */
+  .cr-glass {
+    background: var(--cr-glass-fill);
+    border: 1px solid var(--cr-line);
+    -webkit-backdrop-filter: var(--cr-glass-blur);
+    backdrop-filter: var(--cr-glass-blur);
+  }
+
+  .cr-focus:focus-visible {
+    outline: 2px solid var(--cr-focus);
+    outline-offset: 2px;
+  }
+
+  .cr-scope :lang(bn) {
+    font-family: var(--font-anek), sans-serif;
+    line-height: 1.6;
+  }
+}
+
+/* Under the frosted header (v1.2): on redesigned pages the body takes the page's world base, so
+   the translucent bar never shows the legacy white body. Legacy pages (no .cr-scope main) keep
+   their white body. Unlayered on purpose: it must beat the unlayered legacy body rule. */
+body:has(#main.cr-scope) {
+  background: #140707;
+}
+body:has(#main.cr-scope[data-theme="sky"]) {
+  background: #120f26;
+}
+body:has(#main.cr-scope[data-theme="staff"]) {
+  background: #110e0f;
+}
+body:has(#main.cr-scope[data-theme="artist-studio"]) {
+  background: #0b1710;
+}
+
+/* Sky eyebrows sit in the lit corner, where small Ice text drops below AA (BRAND_GUIDELINE 5.7):
+   they use Cream. Unlayered so it beats the text-highlight utility. */
+[data-theme="sky"] .cr-eyebrow {
+  color: #f6ece6;
+}
+
+/* Reveal (components/ds/reveal.tsx, brand v1.3): a block fades up 24 px once as it first enters.
+   Only blocks that start below the fold are held back, and never under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  [data-reveal="shown"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 650ms var(--ease-corner),
+      transform 650ms var(--ease-corner);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+}

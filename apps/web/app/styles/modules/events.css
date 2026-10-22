@@ -1,0 +1,46 @@
+/*
+ * Events module art direction: "Poster Night" (docs/frontend/modules/events.md).
+ * Scoped to [data-module="events"] so nothing here can reach another module.
+ */
+/* Overrides apply to the Ember world inside this module only (a nested Sky or Staff region keeps its own light). */
+[data-module="events"][data-theme="ember"],
+[data-module="events"] [data-theme="ember"] {
+  --cr-light-size: 78% 68%;
+  --cr-light-pool: rgb(178 31 36 / 0.95);
+}
+
+/* Focus and blur list: the active row stays sharp; siblings soften. Text keeps full contrast
+   on the active row and never relies on blur alone. */
+[data-module="events"] .ev-whatson:has(.ev-row:hover, .ev-row:focus-within) .ev-row:not(:hover, :focus-within) {
+  opacity: 0.55;
+}
+[data-module="events"] .ev-whatson:has(.ev-row:hover, .ev-row:focus-within) .ev-row:not(:hover, :focus-within) .ev-cube {
+  filter: blur(2px);
+}
+[data-module="events"] .ev-row {
+  transition: opacity var(--cr-dur-interaction) var(--ease-corner);
+}
+
+/* Poster title rises 12 px as the page opens (events.md section 7); the cube assembles beside it. */
+@keyframes ev-rise {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+[data-module="events"] .ev-rise {
+  animation: ev-rise calc(var(--cr-dur-hero) * 1.5) var(--ease-corner) both;
+}
+[data-module="events"] .ev-facts dd {
+  font-stretch: 62%;
+  font-weight: 800;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-module="events"] .ev-rise {
+    animation: none;
+  }
+}
